@@ -198,7 +198,8 @@
       <p class="eyebrow">GET A QUOTE</p>
       <h2 style="margin-top:14px; margin-bottom:16px; font-size:clamp(1.5rem,2.6vw,2.05rem);">Tell me about your setup</h2>
       <p style="color:var(--text-muted); margin-bottom:28px; max-width:52ch; line-height:1.6;">I'll reply with a flat price before scheduling anything on site — no visit required just to get a number.</p>
-      <form id="quoteForm" novalidate>
+      <!-- Replace YOUR_FORM_ID with the endpoint from your Formspree form -->
+      <form id="quoteForm" action="https://formspree.io/f/xoeqpywe" method="POST" novalidate>
         <div class="field">
           <label for="biz">Business name</label>
           <input id="biz" name="biz" type="text" placeholder="e.g. Corner Coffee Co." required>
@@ -211,7 +212,8 @@
           <label for="details">What's going on</label>
           <textarea id="details" name="details" placeholder="e.g. One router for the whole shop, staff and customers on the same Wi-Fi, not sure how old the firmware is."></textarea>
         </div>
-        <button type="submit" class="btn-primary" style="border:1px solid var(--cyan); cursor:pointer;">Send &amp; open email</button>
+        <input type="hidden" name="_subject" value="New quote request — Bastion/Upstate">
+        <button type="submit" class="btn-primary" style="border:1px solid var(--cyan); cursor:pointer;">Send request</button>
         <div class="status" id="formStatus" role="status" aria-live="polite"></div>
       </form>
     </div>

@@ -1,36 +1,48 @@
 (() => {
   'use strict';
 
-  const CONTACT_EMAIL = 'michaelavaler08@gmail.com';
+  const FALLBACK_EMAIL = 'michaelavaler08@gmail.com';
 
   const form = document.getElementById('quoteForm');
   if (!form) return;
 
   const statusEl = document.getElementById('formStatus');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const submitLabel = submitBtn.textContent;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const biz = document.getElementById('biz').value.trim();
     const reach = document.getElementById('reach').value.trim();
-    const details = document.getElementById('details').value.trim();
 
     if (!biz || !reach) {
       statusEl.textContent = 'Please fill in your business name and how to reach you.';
       return;
     }
 
-    const subject = `Quote request — ${biz}`;
-    const body = [
-      `Business: ${biz}`,
-      `Reach me at: ${reach}`,
-      '',
-      details || '(no additional details provided)',
-    ].join('\n');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    statusEl.textContent = '';
 
-    const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
 
-    statusEl.textContent = 'Opening your email client…';
-    window.location.href = mailtoUrl;
+      if (response.ok) {
+        statusEl.textContent = "Thanks — I'll get back to you the same business day.";
+        form.reset();
+      } else {
+        statusEl.textContent = `Something went wrong. Email ${FALLBACK_EMAIL} directly instead.`;
+      }
+    } catch (err) {
+      statusEl.textContent = `Network error — email ${FALLBACK_EMAIL} directly instead.`;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+    }
   });
 })();
